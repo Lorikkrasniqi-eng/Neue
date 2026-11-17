@@ -1,5 +1,20 @@
 
-/* Allgemeine Einstellungen */
+/* =====================================
+   FALLAKTE 001 – CRIME DESIGN
+===================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+    --red: #e32636;
+    --dark-red: #8b101b;
+    --black: #08090c;
+    --panel: #14161c;
+    --panel-light: #1c1f27;
+    --white: #eeeeee;
+    --gray: #999da8;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -8,169 +23,643 @@
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 100px;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: #101010;
-    color: white;
-    line-height: 1.6;
+    font-family: 'Roboto', sans-serif;
+    background: var(--black);
+    color: var(--white);
+    line-height: 1.7;
+    overflow-x: hidden;
 }
 
-/* Header */
+/* Hintergrund-Effekt */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(circle at 50% 20%, #48101833, transparent 45%),
+        linear-gradient(120deg, #08090c, #101116, #08090c);
+    z-index: -2;
+    pointer-events: none;
+}
+
+/* =====================================
+   HEADER
+===================================== */
+
 header {
-    background: #080808;
-    padding: 25px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: rgba(7, 8, 11, 0.96);
+    backdrop-filter: blur(15px);
+    padding: 22px 5%;
     text-align: center;
-    border-bottom: 2px solid #e63939;
+    border-bottom: 2px solid var(--red);
+    box-shadow: 0 5px 30px #e3263620;
 }
 
 header h1 {
-    color: #e63939;
-    font-size: 35px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 30px;
+    color: var(--red);
+    letter-spacing: 5px;
+    text-shadow: 0 0 20px #e3263680;
+}
+
+header p {
+    color: var(--gray);
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
 }
 
 /* Navigation */
+
 nav {
-    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 18px;
 }
 
 nav a {
-    color: white;
+    color: #ddd;
     text-decoration: none;
-    margin: 15px;
+    font-size: 12px;
     font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 10px 16px;
+    border: 1px solid transparent;
     transition: 0.3s;
 }
 
 nav a:hover {
-    color: #e63939;
+    color: white;
+    border-color: var(--red);
+    background: #e3263615;
+    box-shadow: 0 0 15px #e3263640;
 }
 
-/* Startbereich */
+/* =====================================
+   HERO / STARTSEITE
+===================================== */
+
 .hero {
-    height: 450px;
-    background:
-        linear-gradient(#0009, #000b),
-        url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23')
-        center/cover;
+    min-height: 650px;
+    position: relative;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 20px;
+    padding: 60px 20px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0,0,0,0.9),
+            rgba(15,0,0,0.65),
+            rgba(0,0,0,0.9)
+        ),
+        url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=1920&q=85')
+        center/cover no-repeat;
+
+    border-bottom: 1px solid #68151d;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(transparent 60%, var(--black));
+    pointer-events: none;
+}
+
+.hero-content {
+    max-width: 850px;
+    position: relative;
+    z-index: 2;
+    animation: fadeUp 1.2s ease;
+}
+
+.warning {
+    display: inline-block;
+    color: var(--red);
+    border: 1px solid var(--red);
+    background: #e3263618;
+    padding: 10px 20px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    margin-bottom: 30px;
+    box-shadow: 0 0 20px #e3263620;
+    animation: warningBlink 2s infinite;
 }
 
 .hero h2 {
-    font-size: 45px;
-    margin-bottom: 20px;
-}
-
-.hero p {
-    font-size: 19px;
-    margin-bottom: 30px;
-}
-
-/* Buttons */
-.button {
-    display: inline-block;
-    background: #e63939;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(35px, 6vw, 75px);
+    line-height: 1.2;
     color: white;
-    padding: 15px 30px;
-    text-decoration: none;
-    border-radius: 5px;
+    text-shadow: 0 0 30px #e3263670;
+    margin-bottom: 25px;
+}
+
+.hero-content > p:not(.warning) {
+    color: #ccc;
+    font-size: 18px;
+    max-width: 650px;
+    margin: 0 auto 20px;
+}
+
+/* =====================================
+   BUTTONS
+===================================== */
+
+.button,
+button {
+    display: inline-block;
+    cursor: pointer;
+    background: linear-gradient(135deg, #c91d2d, #7d101b);
+    border: 1px solid #ff4554;
+    color: white;
+    padding: 15px 25px;
+    margin-top: 20px;
+    border-radius: 4px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
     font-weight: bold;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
     transition: 0.3s;
+    box-shadow: 0 0 15px #e3263630;
 }
 
-.button:hover {
-    background: #a82020;
-    transform: scale(1.05);
+.button:hover,
+button:hover {
+    background: #ed2939;
+    transform: translateY(-3px);
+    box-shadow: 0 0 30px #e3263680;
 }
 
-/* Allgemeine Bereiche */
+/* =====================================
+   ALLGEMEINE SEKTIONEN
+===================================== */
+
 section {
-    padding: 60px 20px;
+    padding: 90px 7%;
     text-align: center;
+    position: relative;
 }
 
 section h2 {
-    color: #e63939;
-    margin-bottom: 25px;
-    font-size: 30px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(24px, 4vw, 36px);
+    color: var(--red);
+    margin-bottom: 35px;
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px #e3263630;
 }
 
-/* Info-Karten */
-.info {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
+section h2::after {
+    content: "";
+    display: block;
+    width: 75px;
+    height: 3px;
+    background: var(--red);
+    margin: 18px auto 0;
+    box-shadow: 0 0 15px var(--red);
+}
+
+section p {
+    color: #c4c4c4;
+}
+
+/* =====================================
+   GESCHICHTE
+===================================== */
+
+#geschichte {
+    background: #0d0e12;
+}
+
+.story-box {
+    max-width: 900px;
+    margin: auto;
+    text-align: left;
+    background: linear-gradient(145deg, #191b22, #101116);
+    border: 1px solid #363942;
+    border-left: 4px solid var(--red);
+    padding: 40px;
+    border-radius: 5px;
+    box-shadow: 0 15px 50px #0008;
+}
+
+.story-box p {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.story-box h3 {
+    color: var(--red);
+    margin: 30px 0 15px;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.story-box ul {
+    padding-left: 25px;
+    color: #ddd;
+}
+
+.story-box li {
+    margin-bottom: 12px;
+}
+
+/* =====================================
+   VERDÄCHTIGE
+===================================== */
+
+#verdaechtige {
+    background:
+        linear-gradient(#101116ed, #101116ed),
+        repeating-linear-gradient(
+            45deg,
+            #ffffff05 0px,
+            #ffffff05 1px,
+            transparent 1px,
+            transparent 10px
+        );
+}
+
+.suspect-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
     gap: 25px;
+    max-width: 1250px;
+    margin: auto;
 }
 
-.card {
-    background: #202020;
-    padding: 30px;
-    border-radius: 10px;
-    width: 250px;
-    border: 1px solid #444;
-    transition: 0.3s;
+.suspect-card {
+    background: linear-gradient(145deg, #20232b, #111217);
+    border: 1px solid #383b45;
+    border-radius: 8px;
+    padding: 30px 20px;
+    transition: 0.4s;
+    position: relative;
+    overflow: hidden;
 }
 
-.card:hover {
-    border-color: #e63939;
-    transform: translateY(-5px);
+.suspect-card::before {
+    content: "CLASSIFIED";
+    position: absolute;
+    top: 12px;
+    right: -30px;
+    background: var(--dark-red);
+    padding: 3px 35px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    transform: rotate(35deg);
+    opacity: 0.8;
 }
 
-.card h3 {
-    color: #e63939;
+.suspect-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--red);
+    box-shadow: 0 10px 35px #e3263630;
+}
+
+.suspect-icon {
+    font-size: 55px;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 10px #e3263660);
+}
+
+.suspect-card h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 15px;
+    color: var(--red);
     margin-bottom: 15px;
 }
 
-/* Kontakt */
-#kontakt {
-    background: #181818;
+.suspect-card p {
+    font-size: 14px;
+    min-height: 90px;
 }
 
-/* Footer */
+.suspect-card span {
+    display: block;
+    margin-top: 20px;
+    padding: 10px;
+    background: #e3263615;
+    border: 1px solid #79202a;
+    color: #ff929b;
+    font-size: 12px;
+}
+
+/* =====================================
+   BEWEISE
+===================================== */
+
+#beweise {
+    background: #0b0c10;
+}
+
+.evidence-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.evidence {
+    text-align: left;
+    background: #1a1c22;
+    border: 1px solid #3b3e47;
+    border-radius: 5px;
+    padding: 30px;
+    position: relative;
+    transition: 0.3s;
+}
+
+.evidence:hover {
+    border-color: var(--red);
+    background: #22242c;
+    transform: scale(1.02);
+}
+
+.evidence h3 {
+    color: #f04a56;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 15px;
+    margin-bottom: 15px;
+}
+
+.evidence p {
+    font-size: 14px;
+}
+
+/* =====================================
+   RÄTSEL
+===================================== */
+
+#raetsel {
+    background:
+        radial-gradient(ellipse at center, #32101740, transparent 65%),
+        #101116;
+}
+
+.subtitle {
+    margin: -15px auto 40px;
+}
+
+.puzzle-box {
+    max-width: 750px;
+    margin: 35px auto;
+    padding: 35px;
+    background: linear-gradient(145deg, #20232b, #121319);
+    border: 1px solid #4b3439;
+    border-top: 3px solid var(--red);
+    border-radius: 7px;
+    box-shadow: 0 15px 40px #0008;
+    text-align: left;
+    transition: 0.3s;
+}
+
+.puzzle-box:hover {
+    box-shadow: 0 15px 45px #e3263620;
+}
+
+.puzzle-box h3 {
+    color: #ff5865;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 17px;
+    margin-bottom: 20px;
+}
+
+.puzzle-box p {
+    margin-bottom: 18px;
+}
+
+/* Eingabefelder */
+
+input,
+select {
+    width: 100%;
+    padding: 15px;
+    margin-top: 12px;
+    background: #090a0e;
+    border: 1px solid #4a4d57;
+    border-radius: 4px;
+    color: white;
+    font-size: 15px;
+    outline: none;
+    transition: 0.3s;
+}
+
+input:focus,
+select:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 15px #e3263640;
+}
+
+input::placeholder {
+    color: #777;
+}
+
+/* Rätsel-Ergebnisse */
+
+.result {
+    margin-top: 20px;
+    font-weight: bold;
+    color: #ff707b;
+}
+
+/* Geheimer Tresor */
+
+.secret-box {
+    margin-top: 30px;
+    padding: 30px;
+    background: #17241c;
+    border: 1px solid #3a9d60;
+    border-radius: 5px;
+    animation: fadeUp 0.8s ease;
+}
+
+.secret-box h3 {
+    color: #55d987;
+}
+
+.secret-box blockquote {
+    color: #fff;
+    border-left: 3px solid var(--red);
+    padding: 15px;
+    margin-top: 20px;
+    background: #0005;
+    font-style: italic;
+}
+
+/* =====================================
+   AUFLÖSUNG
+===================================== */
+
+#aufloesung {
+    background: linear-gradient(145deg, #190b0e, #0a0b0f);
+    border-top: 1px solid #68212b;
+    border-bottom: 1px solid #68212b;
+}
+
+#aufloesung > p {
+    max-width: 600px;
+    margin: auto;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+
 footer {
-    background: #080808;
-    padding: 20px;
     text-align: center;
-    color: #888;
+    padding: 50px 20px;
+    background: #06070a;
+    border-top: 2px solid var(--red);
 }
 
-/* Handy-Ansicht */
-@media (max-width: 600px) {
-    header h1 {
-        font-size: 27px;
+footer h3 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--red);
+    letter-spacing: 4px;
+    margin-bottom: 15px;
+}
+
+footer p {
+    color: #777;
+    font-size: 12px;
+    margin: 8px;
+}
+
+/* =====================================
+   ANIMATIONEN
+===================================== */
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
     }
 
-    nav a {
-        display: inline-block;
-        margin: 5px;
-        font-size: 14px;
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes warningBlink {
+    0%, 100% {
+        box-shadow: 0 0 10px #e3263620;
+    }
+
+    50% {
+        box-shadow: 0 0 25px #e3263680;
+    }
+}
+
+/* =====================================
+   SCROLLBAR
+===================================== */
+
+::-webkit-scrollbar {
+    width: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background: #08090c;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #8b101b;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #e32636;
+}
+
+/* =====================================
+   HANDY / TABLET
+===================================== */
+
+@media (max-width: 900px) {
+    .suspect-container {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .hero {
-        height: 350px;
+        min-height: 550px;
+    }
+}
+
+@media (max-width: 600px) {
+    header {
+        padding: 18px 10px;
+    }
+
+    header h1 {
+        font-size: 22px;
+        letter-spacing: 2px;
+    }
+
+    nav {
+        gap: 5px;
+    }
+
+    nav a {
+        font-size: 10px;
+        padding: 8px;
+    }
+
+    .hero {
+        min-height: 500px;
     }
 
     .hero h2 {
-        font-size: 32px;
+        font-size: 35px;
     }
 
-    .hero p {
-        font-size: 16px;
+    .hero-content > p:not(.warning) {
+        font-size: 15px;
     }
 
     section {
-        padding: 40px 15px;
+        padding: 65px 18px;
     }
 
-    .card {
+    .suspect-container {
+        grid-template-columns: 1fr;
+    }
+
+    .evidence-container {
+        grid-template-columns: 1fr;
+    }
+
+    .story-box {
+        padding: 22px;
+    }
+
+    .puzzle-box {
+        padding: 23px;
+    }
+
+    .button,
+    button {
         width: 100%;
-        max-width: 300px;
+        text-align: center;
     }
 }
