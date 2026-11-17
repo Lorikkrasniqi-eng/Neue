@@ -663,3 +663,21 @@ footer p {
         text-align: center;
     }
 }
+
+/* COUNTDOWN DESIGN */
+
+.timer-display {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(55px, 10vw, 100px);
+    font-weight: bold;
+    color: #e32636;
+    text-shadow: 0 0 30px #e32636;
+    margin: 25px 0;
+    letter-spacing: 8px;
+}
+
+#countdown {
+    background: #0a0b0f;
+    border-top: 1px solid #68151d;
+    border-bottom: 1px solid #68151d;
+}
