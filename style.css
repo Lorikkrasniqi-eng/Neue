@@ -565,3 +565,58 @@ footer p {
         text-align: center;
     }
 }
+
+/* JAVASCRIPT STATUS MELDUNGEN */
+
+.success-message {
+    color: #53d69a !important;
+    background: #53d69a15;
+    border: 1px solid #53d69a70;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.error-message {
+    color: #ff596b !important;
+    background: #ff3d5015;
+    border: 1px solid #ff3d5070;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.info-message {
+    color: #42e8ff !important;
+    background: #42e8ff15;
+    border: 1px solid #42e8ff70;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.timer-danger {
+    color: #ff3d50 !important;
+    animation: warningPulse 1s infinite;
+}
+
+.secret-box {
+    color: #e9f0f8;
+    background: #142c28;
+    border: 1px solid #53d69a;
+    padding: 30px;
+    border-radius: 12px;
+    animation: heroEnter .7s ease;
+}
+
+body.loaded {
+    animation: heroEnter .8s ease;
+}
+
+body.case-solved {
+    --cyan: #53d69a;
+}
+
+body.time-expired {
+    --cyan: #ff3d50;
+}
