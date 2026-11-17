@@ -1,415 +1,613 @@
 
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Fallakte 001 – Der Mord im Präsidentenbüro</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Orbitron:wght@400;600;800&display=swap');
+    <title>FBI Investigation | Fallakte 001</title>
 
-* {
-    box-sizing: border-box;
-}
+    <link rel="stylesheet" href="style.css">
 
-body {
-    margin: 0;
-    min-height: 100vh;
-    background:
-        radial-gradient(circle at top, #252525, #080808 65%);
-    color: #eee;
-    font-family: 'Special Elite', monospace;
-    padding: 30px 15px;
-}
-
-.container {
-    max-width: 850px;
-    margin: auto;
-}
-
-.header {
-    text-align: center;
-    border: 1px solid #a52323;
-    padding: 30px 15px;
-    background: linear-gradient(145deg, #241010, #111);
-    box-shadow: 0 0 30px #a000003b;
-    border-radius: 12px;
-}
-
-.header h1 {
-    color: #ff3939;
-    font-family: 'Orbitron', sans-serif;
-    letter-spacing: 3px;
-    font-size: clamp(25px, 5vw, 38px);
-    text-shadow: 0 0 15px red;
-}
-
-.status {
-    color: #ff5555;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 12px;
-    letter-spacing: 2px;
-}
-
-.card {
-    margin-top: 25px;
-    padding: 25px;
-    background: #171717;
-    border: 1px solid #383838;
-    border-left: 4px solid #b51d1d;
-    border-radius: 9px;
-    box-shadow: 0 8px 25px #0008;
-}
-
-h2 {
-    color: #ff4545;
-}
-
-h3 {
-    color: #e8c47a;
-}
-
-button {
-    background: linear-gradient(135deg, #a71919, #5d0808);
-    color: white;
-    border: 1px solid #ff4545;
-    padding: 13px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-family: 'Orbitron', sans-serif;
-    font-size: 12px;
-    transition: .25s;
-    margin-top: 12px;
-}
-
-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 0 18px #ff222277;
-    background: #d32323;
-}
-
-button:disabled {
-    opacity: .5;
-    cursor: not-allowed;
-}
-
-.clue {
-    display: none;
-    background: #282016;
-    border: 1px dashed #e8c47a;
-    color: #f5d99a;
-    padding: 18px;
-    margin-top: 18px;
-    border-radius: 7px;
-    line-height: 1.6;
-    animation: appear .5s ease;
-}
-
-@keyframes appear {
-    from {opacity: 0; transform: translateY(10px);}
-    to {opacity: 1; transform: translateY(0);}
-}
-
-.suspects {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
-    gap: 12px;
-    margin-top: 20px;
-}
-
-.suspect {
-    background: #222;
-    border: 1px solid #444;
-    padding: 18px 10px;
-    border-radius: 8px;
-    text-align: center;
-    cursor: pointer;
-    transition: .2s;
-}
-
-.suspect:hover {
-    border-color: #ff4545;
-    background: #321717;
-}
-
-.suspect.selected {
-    border: 2px solid #ff4545;
-    background: #421818;
-    box-shadow: 0 0 15px #ff000044;
-}
-
-.suspect .emoji {
-    font-size: 32px;
-    display: block;
-    margin-bottom: 10px;
-}
-
-select {
-    width: 100%;
-    padding: 14px;
-    margin-top: 15px;
-    color: white;
-    background: #252525;
-    border: 1px solid #666;
-    border-radius: 6px;
-    font-size: 15px;
-}
-
-.result {
-    margin-top: 20px;
-    padding: 18px;
-    border-radius: 7px;
-    display: none;
-    line-height: 1.6;
-}
-
-.success {
-    display: block;
-    background: #10351e;
-    border: 1px solid #30c76b;
-    color: #8cffad;
-}
-
-.fail {
-    display: block;
-    background: #3b1414;
-    border: 1px solid #e33;
-    color: #ff9999;
-}
-
-.progress {
-    height: 8px;
-    background: #333;
-    border-radius: 10px;
-    margin-top: 15px;
-    overflow: hidden;
-}
-
-.progress-bar {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, red, orange);
-    transition: .5s;
-}
-
-.footer {
-    text-align: center;
-    color: #777;
-    font-size: 11px;
-    margin: 30px;
-    letter-spacing: 2px;
-}
-</style>
+    <script src="script.js" defer></script>
 </head>
 
 <body>
 
-<div class="container">
+<!-- =================================
+     HEADER / NAVIGATION
+================================= -->
 
-    <div class="header">
-        <div class="status">● GEHEIME ERMITTLUNG // LEVEL 01</div>
-        <h1>🕵️ FALLAKTE 001</h1>
-        <p>DER TOD IM PRÄSIDENTENBÜRO</p>
-        <p style="color:#aaa">CLASSIFIED INFORMATION</p>
+<header>
+
+    <div>
+        <h1>FBI // INVESTIGATION</h1>
+        <p>FEDERAL BUREAU OF INVESTIGATION</p>
     </div>
 
-    <div class="card">
-        <h2>🚨 DER TATORT</h2>
+    <nav>
+        <a href="#start">START</a>
+        <a href="#geschichte">FALL</a>
+        <a href="#verdaechtige">VERDÄCHTIGE</a>
+        <a href="#beweise">BEWEISE</a>
+        <a href="#raetsel">RÄTSEL</a>
+        <a href="#aufloesung">AUFLÖSUNG</a>
+    </nav>
+
+</header>
+
+
+<!-- =================================
+     HERO / STARTSEITE
+================================= -->
+
+<section class="hero" id="start">
+
+    <div class="hero-content">
+
+        <div class="warning">
+            ⚠ CLASSIFIED CASE // 001
+        </div>
+
+        <h2>THE PRESIDENT<br>IS DEAD.</h2>
 
         <p>
-            Um <strong>23:47 Uhr</strong> wurde der Präsident
-            tot in seinem Büro gefunden.
+            Ein Präsident. Vier Verdächtige.
+            Ein mysteriöser Mord.
+            Nur die besten Ermittler können die Wahrheit aufdecken.
         </p>
 
         <p>
-            Die Tür war verschlossen. Vier Personen hatten
-            Zugang zum Gebäude.
+            Deine Mission beginnt jetzt.
         </p>
 
-        <p style="color:#ff5555">
-            Deine Mission: Finde den Täter, bevor alle Beweise verschwinden!
-        </p>
+        <a href="#geschichte" class="button">
+            MISSION STARTEN →
+        </a>
+
     </div>
 
-    <div class="card">
-        <h2>⌚ BEWEIS 01 – DIE MYSTERIÖSE UHR</h2>
+</section>
+
+
+<!-- =================================
+     SYSTEM STATUS
+================================= -->
+
+<section id="system">
+
+    <h2>MISSION CONTROL</h2>
+
+    <div class="evidence-container">
+
+        <div class="evidence">
+            <h3>🔴 CASE STATUS</h3>
+            <p>OFFEN // UNGELÖST</p>
+        </div>
+
+        <div class="evidence">
+            <h3>🕵️ ERMITTLER</h3>
+            <p>AGENT 001</p>
+        </div>
+
+        <div class="evidence">
+            <h3>📁 FALLNUMMER</h3>
+            <p>FBI-2026-001</p>
+        </div>
+
+        <div class="evidence">
+            <h3>🔐 SICHERHEIT</h3>
+            <p>TOP SECRET</p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =================================
+     GESCHICHTE
+================================= -->
+
+<section id="geschichte">
+
+    <h2>📂 DIE FALLAKTE</h2>
+
+    <div class="story-box">
+
+        <h3>DER MORD IM PRÄSIDENTENBÜRO</h3>
 
         <p>
-            Eine alte Wanduhr wurde am Tatort gefunden.
-            Sie ist um exakt <strong>23:15 Uhr</strong> stehen geblieben.
+            Am späten Abend wurde der Präsident
+            tot in seinem Büro aufgefunden.
         </p>
 
-        <p>Was ist passiert?</p>
+        <p>
+            Die Polizei erhielt um exakt
+            <strong>23:47 Uhr</strong> einen Notruf.
+        </p>
 
-        <button onclick="showClue()">
-            🔍 BEWEIS UNTERSUCHEN
+        <p>
+            Die Tür des Büros war verschlossen.
+            Auf dem Schreibtisch lagen ein geheimer Brief,
+            eine zerbrochene Uhr und mehrere Dokumente.
+        </p>
+
+        <h3>DIE ERSTEN ERMITTLUNGSERGEBNISSE</h3>
+
+        <ul>
+            <li>Die Wanduhr blieb um 23:15 Uhr stehen.</li>
+            <li>Vier Personen hatten Zugang zum Gebäude.</li>
+            <li>Ein geheimer Tresor wurde entdeckt.</li>
+            <li>Ein Brief deutet auf ein politisches Motiv hin.</li>
+        </ul>
+
+        <h3>DEINE AUFGABE</h3>
+
+        <p>
+            Untersuche alle Beweise, löse die Rätsel
+            und finde heraus, wer für den Tod des
+            Präsidenten verantwortlich ist.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =================================
+     COUNTDOWN
+================================= -->
+
+<section id="countdown">
+
+    <h2>⏱️ ZEIT BIS ZUM ENDE DER ERMITTLUNG</h2>
+
+    <div class="timer-display" id="timer">
+        60:00
+    </div>
+
+    <p>
+        Du hast 60 Minuten, um den Fall zu lösen.
+    </p>
+
+    <button onclick="startTimer()">▶ START</button>
+
+    <button onclick="pauseTimer()">Ⅱ PAUSE</button>
+
+    <button onclick="resetTimer()">↻ RESET</button>
+
+    <p id="timerMessage" class="result"></p>
+
+</section>
+
+
+<!-- =================================
+     VERDÄCHTIGE
+================================= -->
+
+<section id="verdaechtige">
+
+    <h2>👥 DIE VIER VERDÄCHTIGEN</h2>
+
+    <p class="subtitle">
+        Jeder hat ein Motiv. Jeder hat etwas zu verbergen.
+    </p>
+
+    <div class="suspect-container">
+
+        <div class="suspect-card">
+
+            <div class="suspect-icon">🛡️</div>
+
+            <h3>DER SICHERHEITSCHEF</h3>
+
+            <p>
+                Verantwortlich für die Sicherheit des
+                Präsidenten. Hatte Zugang zu allen Räumen.
+            </p>
+
+            <span>STATUS: UNTER BEOBACHTUNG</span>
+
+        </div>
+
+
+        <div class="suspect-card">
+
+            <div class="suspect-icon">📁</div>
+
+            <h3>DIE SEKRETÄRIN</h3>
+
+            <p>
+                Kannte sämtliche Termine und wusste,
+                wann der Präsident alleine war.
+            </p>
+
+            <span>STATUS: VERDÄCHTIG</span>
+
+        </div>
+
+
+        <div class="suspect-card">
+
+            <div class="suspect-icon">🎩</div>
+
+            <h3>DER VIZEPRÄSIDENT</h3>
+
+            <p>
+                Wollte angeblich schon lange die Macht
+                übernehmen. Hatte ein starkes Motiv.
+            </p>
+
+            <span>STATUS: HOCHVERDÄCHTIG</span>
+
+        </div>
+
+
+        <div class="suspect-card">
+
+            <div class="suspect-icon">🩺</div>
+
+            <h3>DER HAUSARZT</h3>
+
+            <p>
+                War kurz vor dem Tod des Präsidenten
+                im Gebäude.
+            </p>
+
+            <span>STATUS: UNTER BEOBACHTUNG</span>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =================================
+     BEWEISE
+================================= -->
+
+<section id="beweise">
+
+    <h2>🔍 BEWEISDATENBANK</h2>
+
+    <div class="evidence-container">
+
+        <div class="evidence">
+
+            <h3>⌚ BEWEIS 01 – DIE UHR</h3>
+
+            <p>
+                Die Wanduhr blieb um 23:15 Uhr stehen.
+                Das Glas ist beschädigt.
+            </p>
+
+            <p>BEWEISSTATUS: GESICHERT</p>
+
+        </div>
+
+
+        <div class="evidence">
+
+            <h3>✉️ BEWEIS 02 – DER BRIEF</h3>
+
+            <p>
+                Ein geheimnisvoller Brief deutet
+                auf eine politische Verschwörung hin.
+            </p>
+
+            <p>BEWEISSTATUS: ZU UNTERSUCHEN</p>
+
+        </div>
+
+
+        <div class="evidence">
+
+            <h3>🔐 BEWEIS 03 – DER TRESOR</h3>
+
+            <p>
+                Ein verschlossener Tresor enthält
+                möglicherweise die entscheidenden Dokumente.
+            </p>
+
+            <p>BEWEISSTATUS: GESPERRT</p>
+
+        </div>
+
+
+        <div class="evidence">
+
+            <h3>📄 BEWEIS 04 – DIE DOKUMENTE</h3>
+
+            <p>
+                Geheime Unterlagen könnten das Motiv
+                des Täters enthüllen.
+            </p>
+
+            <p>BEWEISSTATUS: GESPERRT</p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =================================
+     RÄTSEL 01
+================================= -->
+
+<section id="raetsel">
+
+    <h2>🧩 DIE ERMITTLUNGEN</h2>
+
+    <p class="subtitle">
+        Löse die Rätsel, um Zugang zu geheimen Informationen zu erhalten.
+    </p>
+
+
+    <div class="puzzle-box">
+
+        <h3>01 // DIE MYSTERIÖSE UHR</h3>
+
+        <p>
+            Die Uhr blieb um 23:15 Uhr stehen.
+        </p>
+
+        <p>
+            Gib die Uhrzeit ohne Doppelpunkt ein.
+        </p>
+
+        <input
+            type="text"
+            id="answer1"
+            placeholder="Vierstelligen Code eingeben..."
+            maxlength="4"
+        >
+
+        <button onclick="checkPuzzle1()">
+            ANTWORT ÜBERPRÜFEN
         </button>
 
-        <div class="clue" id="clue">
-            <strong>📁 GEHEIME NOTIZ ENTDECKT</strong>
-            <p>
-                Die Uhr ist nicht einfach kaputtgegangen.
-                Auf dem Glas befinden sich winzige Glassplitter.
-                Jemand könnte die Uhr während eines Kampfes
-                beschädigt haben.
-            </p>
-            <p>⚠️ Zeitpunkt des Vorfalls: möglicherweise 23:15 Uhr.</p>
-        </div>
+        <button onclick="showHint(1)">
+            HINWEIS ANFORDERN
+        </button>
+
+        <div id="result1" class="result"></div>
+
+        <div id="hint1" class="result" hidden></div>
+
     </div>
 
-    <div class="card">
-        <h2>👥 BEWEIS 02 – DIE VERDÄCHTIGEN</h2>
 
-        <p>Vier Personen kommen infrage. Wähle deinen Hauptverdächtigen:</p>
+    <!-- RÄTSEL 02 -->
 
-        <div class="suspects">
+    <div class="puzzle-box">
 
-            <div class="suspect" onclick="selectSuspect('security',this)">
-                <span class="emoji">🛡️</span>
+        <h3>02 // DER GEHEIME BRIEF</h3>
+
+        <p>
+            Im Brief steht:
+        </p>
+
+        <blockquote>
+            "Bald wird sich alles ändern.
+            Die Macht wird in meine Hände übergehen.
+            Niemand wird mich aufhalten."
+        </blockquote>
+
+        <p>
+            Wer könnte diesen Brief geschrieben haben?
+        </p>
+
+        <select id="answer2">
+
+            <option value="">Verdächtigen auswählen</option>
+
+            <option value="security">
                 Sicherheitschef
-                <small> Zugang zum Gebäude</small>
-            </div>
+            </option>
 
-            <div class="suspect" onclick="selectSuspect('secretary',this)">
-                <span class="emoji">📁</span>
+            <option value="secretary">
                 Sekretärin
-                <small> Kennt alle Termine</small>
-            </div>
+            </option>
 
-            <div class="suspect" onclick="selectSuspect('vice',this)">
-                <span class="emoji">🎩</span>
+            <option value="vice">
                 Vizepräsident
-                <small> Politisches Motiv</small>
-            </div>
+            </option>
 
-            <div class="suspect" onclick="selectSuspect('doctor',this)">
-                <span class="emoji">🩺</span>
+            <option value="doctor">
                 Hausarzt
-                <small> War zuletzt im Büro</small>
-            </div>
+            </option>
 
-        </div>
+        </select>
 
-        <button onclick="checkSuspect()">
-            🔐 VERDÄCHTIGEN ANALYSIEREN
+        <button onclick="checkPuzzle2()">
+            BRIEF ANALYSIEREN
         </button>
 
-        <div id="result" class="result"></div>
+        <button onclick="showHint(2)">
+            HINWEIS ANFORDERN
+        </button>
+
+        <div id="result2" class="result"></div>
+
+        <div id="hint2" class="result" hidden></div>
+
     </div>
 
-    <div class="card">
-        <h2>📊 ERMITTLUNGSFORTSCHRITT</h2>
 
-        <p id="progressText">0 % der Ermittlungen abgeschlossen</p>
+    <!-- TRESOR -->
 
-        <div class="progress">
-            <div class="progress-bar" id="progressBar"></div>
+    <div class="puzzle-box">
+
+        <h3>03 // DER GEHEIME TRESOR</h3>
+
+        <p>
+            Du hast einen verschlossenen Tresor gefunden.
+        </p>
+
+        <p>
+            Verwende den richtigen Code, um ihn zu öffnen.
+        </p>
+
+        <input
+            type="password"
+            id="vaultCode"
+            placeholder="Sicherheitscode eingeben..."
+            maxlength="4"
+        >
+
+        <button onclick="openVault()">
+            🔓 TRESOR ÖFFNEN
+        </button>
+
+        <button onclick="showHint(3)">
+            HINWEIS ANFORDERN
+        </button>
+
+        <div id="vaultResult" class="result"></div>
+
+        <div id="hint3" class="result" hidden></div>
+
+
+        <!-- GEHEIMES DOKUMENT -->
+
+        <div id="secret" class="secret-box" hidden>
+
+            <h3>🔓 CLASSIFIED DOCUMENT</h3>
+
+            <h2>GEHEIME AKTE 001-A</h2>
+
+            <p>
+                In den Dokumenten wurde ein Hinweis
+                auf den Vizepräsidenten gefunden.
+            </p>
+
+            <p>
+                Er wollte die Präsidentschaft übernehmen
+                und hatte Angst, dass seine Pläne
+                entdeckt werden würden.
+            </p>
+
+            <blockquote>
+                "Wenn der Präsident verschwindet,
+                gehört die Macht endlich mir."
+            </blockquote>
+
+            <p>
+                DOKUMENTSTATUS: ERFOLGREICH ENTSCHLÜSSELT
+            </p>
+
         </div>
+
     </div>
 
-    <div class="footer">
-        CONFIDENTIAL // POLICE DEPARTMENT // CASE 001
+
+    <!-- TÄTER FINDEN -->
+
+    <div class="puzzle-box">
+
+        <h3>04 // DIE LETZTE ENTSCHEIDUNG</h3>
+
+        <p>
+            Du hast alle Hinweise untersucht.
+            Jetzt musst du entscheiden.
+        </p>
+
+        <p>
+            Wer hat den Präsidenten ermordet?
+        </p>
+
+        <select id="finalSuspect">
+
+            <option value="">Täter auswählen</option>
+
+            <option value="security">
+                Sicherheitschef
+            </option>
+
+            <option value="secretary">
+                Sekretärin
+            </option>
+
+            <option value="vice">
+                Vizepräsident
+            </option>
+
+            <option value="doctor">
+                Hausarzt
+            </option>
+
+        </select>
+
+        <button onclick="solveCase()">
+            🚨 TÄTER ENTLARVEN
+        </button>
+
+        <div id="finalResult" class="result"></div>
+
     </div>
 
-</div>
+</section>
 
-<script>
 
-let selected = "";
-let clueFound = false;
-let attempts = 0;
+<!-- =================================
+     FORTSCHRITT
+================================= -->
 
-// Täter: Vizepräsident
-const killer = "vice";
+<section id="fortschritt">
 
-function showClue() {
-    document.getElementById("clue").style.display = "block";
+    <h2>📊 ERMITTLUNGSFORTSCHRITT</h2>
 
-    if (!clueFound) {
-        clueFound = true;
-        updateProgress();
-    }
-}
+    <p id="progressText">
+        0% DER ERMITTLUNGEN ABGESCHLOSSEN
+    </p>
 
-function selectSuspect(id, element) {
-    selected = id;
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
 
-    document.querySelectorAll(".suspect").forEach(el => {
-        el.classList.remove("selected");
-    });
+    <p id="clueCounter">
+        0 / 4 BEWEISE
+    </p>
 
-    element.classList.add("selected");
-}
+</section>
 
-function checkSuspect() {
 
-    const result = document.getElementById("result");
+<!-- =================================
+     AUFLÖSUNG
+================================= -->
 
-    if (!selected) {
-        result.className = "result fail";
-        result.innerHTML = "⚠️ Wähle zuerst einen Verdächtigen aus!";
-        return;
-    }
+<section id="aufloesung">
 
-    attempts++;
+    <h2>🔒 GEHEIME FALLAUFLÖSUNG</h2>
 
-    if (selected === killer) {
+    <p>
+        Die vollständige Auflösung wird erst
+        nach erfolgreichem Abschluss der Ermittlungen angezeigt.
+    </p>
 
-        result.className = "result success";
+</section>
 
-        result.innerHTML = `
-            <h2>🎉 FALL GELÖST!</h2>
-            <p>
-                Du hast den Täter entlarvt!
-                Der Vizepräsident war für den Mord verantwortlich.
-            </p>
-            <p>
-                Sein Motiv: Er wollte selbst Präsident werden.
-                Die Uhr blieb während einer Auseinandersetzung um
-                23:15 Uhr stehen.
-            </p>
-            <h3>🏆 ERMITTLUNGSERFOLG!</h3>
-            <p>Versuche: ${attempts}</p>
-            <p>Fallakte 001 wurde erfolgreich geschlossen.</p>
-        `;
 
-        document.querySelectorAll(".suspect").forEach(el => {
-            el.style.pointerEvents = "none";
-        });
+<!-- =================================
+     FOOTER
+================================= -->
 
-        document.querySelector(".suspect.selected").style.borderColor = "#30c76b";
+<footer>
 
-    } else {
+    <h3>FBI // INVESTIGATION UNIT</h3>
 
-        result.className = "result fail";
+    <p>FALLAKTE 001 – MORD AM PRÄSIDENTEN</p>
 
-        result.innerHTML = `
-            <h3>❌ FALSCHE SPUR!</h3>
-            <p>Diese Person ist nicht der Täter.</p>
-            <p>Untersuche die Beweise genauer und versuche es erneut.</p>
-            <p>Fehlversuche: ${attempts}</p>
-        `;
-    }
+    <p>TOP SECRET // CLASSIFIED INFORMATION</p>
 
-    updateProgress();
-}
+    <p>© 2026 FBI INVESTIGATION PROJECT</p>
 
-function updateProgress() {
-
-    let progress = clueFound ? 50 : 0;
-
-    if (document.getElementById("result").classList.contains("success")) {
-        progress = 100;
-    }
-
-    document.getElementById("progressBar").style.width = progress + "%";
-
-    document.getElementById("progressText").innerText =
-        progress + " % der Ermittlungen abgeschlossen";
-}
-
-</script>
+</footer>
 
 </body>
 </html>
