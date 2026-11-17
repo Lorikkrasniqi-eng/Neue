@@ -1,105 +1,151 @@
 
 /* =========================================
+   FBI INVESTIGATION SYSTEM
    FALLAKTE 001 – MORD AM PRÄSIDENTEN
-   INTERAKTIVES ESCAPE ROOM SYSTEM
 ========================================= */
 
+"use strict";
+
 // =========================================
-// 1. BEGRÜSSUNG
+// 1. SYSTEM INITIALISIEREN
 // =========================================
 
-window.addEventListener("load", function () {
-    console.log("FALLAKTE 001 geladen.");
-    console.log("Ermittler, deine Mission beginnt jetzt.");
+let timeLeft = 3600;
+let timerInterval = null;
+let timerRunning = false;
+
+const progress = {
+    puzzle1: false,
+    puzzle2: false,
+    vault: false,
+    final: false
+};
+
+const hints = {
+    1: "Die Uhr blieb um 23:15 Uhr stehen. Verwende vier Ziffern ohne Doppelpunkt.",
+    2: "Der Brief deutet auf jemanden hin, der politische Macht gewinnen möchte.",
+    3: "Der geheime Tresor verwendet dieselbe Uhrzeit wie der erste Beweis."
+};
+
+window.addEventListener("DOMContentLoaded", () => {
+    console.log("FBI INVESTIGATION SYSTEM ONLINE");
 
     document.body.classList.add("loaded");
+
+    updateTimer();
+    updateProgress();
+    initializeEffects();
 });
 
 
 // =========================================
-// 2. COUNTDOWN – 60 MINUTEN
+// 2. COUNTDOWN SYSTEM
 // =========================================
 
-let timeLeft = 60 * 60;
-let timerInterval = null;
-let timerRunning = false;
-
 function updateTimer() {
-    const timerDisplay = document.getElementById("timer");
+    const display = document.getElementById("timer");
 
-    if (!timerDisplay) return;
+    if (!display) return;
 
-    let minutes = Math.floor(timeLeft / 60);
-    let seconds = timeLeft % 60;
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
 
-    timerDisplay.textContent =
+    display.textContent =
         String(minutes).padStart(2, "0") +
         ":" +
         String(seconds).padStart(2, "0");
 
-    if (timeLeft <= 300) {
-        timerDisplay.style.color = "#ff3030";
-    }
+    display.classList.toggle("timer-danger", timeLeft <= 300);
 }
 
 function startTimer() {
-    if (timerRunning || timeLeft <= 0) return;
+    if (timerRunning || timeLeft <= 0 || progress.final) return;
 
     timerRunning = true;
 
-    timerInterval = setInterval(function () {
+    timerInterval = setInterval(() => {
         timeLeft--;
+
         updateTimer();
 
         if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            timerRunning = false;
+            pauseTimer();
 
-            alert("ZEIT ABGELAUFEN! Der Fall bleibt ungelöst.");
+            showMessage(
+                "timerMessage",
+                "🚨 ZEIT ABGELAUFEN! Der Fall bleibt ungelöst.",
+                "error"
+            );
+
+            document.body.classList.add("time-expired");
         }
+
     }, 1000);
 }
 
 function pauseTimer() {
     clearInterval(timerInterval);
+    timerInterval = null;
     timerRunning = false;
 }
 
 function resetTimer() {
-    clearInterval(timerInterval);
+    pauseTimer();
 
-    timerRunning = false;
-    timeLeft = 60 * 60;
+    timeLeft = 3600;
+
+    document.body.classList.remove("time-expired");
 
     updateTimer();
+
+    showMessage(
+        "timerMessage",
+        "Countdown wurde zurückgesetzt.",
+        "success"
+    );
 }
 
 
 // =========================================
-// 3. RÄTSEL 01 – DIE UHR
+// 3. RÄTSEL 01 – DIE MYSTERIÖSE UHR
 // =========================================
 
 function checkPuzzle1() {
-    const answer = document
-        .getElementById("answer1")
-        .value.trim();
-
+    const input = document.getElementById("answer1");
     const result = document.getElementById("result1");
 
-    if (answer === "2315") {
-        result.innerHTML =
-            "🔓 RICHTIG! Die Uhrzeit lautet 23:15. " +
-            "Du hast einen wichtigen Hinweis gefunden!";
+    if (!input || !result) return;
 
-        result.style.color = "#55d987";
+    const answer = input.value.trim().replace(":", "");
+
+    if (progress.puzzle1) {
+        showMessage("result1", "✓ Dieser Beweis wurde bereits untersucht.", "success");
+        return;
+    }
+
+    if (answer === "2315") {
+
+        progress.puzzle1 = true;
+
+        showMessage(
+            "result1",
+            "✓ BEWEIS BESTÄTIGT! Die Uhr blieb um 23:15 Uhr stehen. Ein wichtiger Hinweis wurde registriert.",
+            "success"
+        );
+
+        input.disabled = true;
 
         playSound(800);
+        updateProgress();
+        unlockEffect();
 
     } else {
-        result.innerHTML =
-            "❌ FALSCH! Untersuche die kaputte Uhr nochmals.";
 
-        result.style.color = "#ff4545";
+        showMessage(
+            "result1",
+            "✕ FALSCHE ZEIT! Untersuche die Uhr noch einmal.",
+            "error"
+        );
 
         playSound(200);
     }
@@ -107,33 +153,54 @@ function checkPuzzle1() {
 
 
 // =========================================
-// 4. RÄTSEL 02 – DER BRIEF
+// 4. RÄTSEL 02 – DER GEHEIME BRIEF
 // =========================================
 
 function checkPuzzle2() {
-    const answer = document.getElementById("answer2").value;
+    const input = document.getElementById("answer2");
     const result = document.getElementById("result2");
+
+    if (!input || !result) return;
+
+    const answer = input.value.trim().toLowerCase();
+
+    if (progress.puzzle2) {
+        showMessage("result2", "✓ Der Brief wurde bereits ausgewertet.", "success");
+        return;
+    }
+
+    if (!progress.puzzle1) {
+        showMessage(
+            "result2",
+            "🔒 ZUGRIFF GESPERRT! Löse zuerst Rätsel 01.",
+            "error"
+        );
+        return;
+    }
 
     if (answer === "vice") {
 
-        result.innerHTML =
-            "🔍 RICHTIG! Der Vizepräsident hatte ein starkes Motiv.";
+        progress.puzzle2 = true;
 
-        result.style.color = "#55d987";
+        showMessage(
+            "result2",
+            "✓ VERDÄCHTIGER IDENTIFIZIERT! Der Vizepräsident hatte ein mögliches Motiv.",
+            "success"
+        );
 
-        playSound(800);
+        input.disabled = true;
 
-    } else if (answer === "") {
-
-        result.textContent =
-            "Bitte wähle zuerst einen Verdächtigen.";
+        playSound(900);
+        updateProgress();
+        unlockEffect();
 
     } else {
 
-        result.innerHTML =
-            "❌ Dieser Verdächtige passt nicht zum Hinweis.";
-
-        result.style.color = "#ff4545";
+        showMessage(
+            "result2",
+            "✕ FALSCHE SPUR! Dieser Verdächtige passt nicht zum Brief.",
+            "error"
+        );
 
         playSound(200);
     }
@@ -145,21 +212,42 @@ function checkPuzzle2() {
 // =========================================
 
 function openVault() {
-    const code = document.getElementById("vaultCode").value;
-
+    const input = document.getElementById("vaultCode");
     const result = document.getElementById("vaultResult");
     const secret = document.getElementById("secret");
 
-    if (code === "2315") {
+    if (!input || !result || !secret) return;
 
-        result.innerHTML =
-            "🔓 ZUGRIFF GEWÄHRT! Der Tresor ist geöffnet.";
+    if (progress.vault) {
+        showMessage("vaultResult", "✓ Tresor ist bereits geöffnet.", "success");
+        return;
+    }
 
-        result.style.color = "#55d987";
+    if (!progress.puzzle1 || !progress.puzzle2) {
+        showMessage(
+            "vaultResult",
+            "🔒 SICHERHEITSSPERRE! Löse zuerst beide Rätsel.",
+            "error"
+        );
+        return;
+    }
+
+    if (input.value.trim() === "2315") {
+
+        progress.vault = true;
+
+        showMessage(
+            "vaultResult",
+            "ACCESS GRANTED // TRESOR ERFOLGREICH GEÖFFNET",
+            "success"
+        );
 
         secret.hidden = false;
+        input.disabled = true;
 
-        playSound(1000);
+        playSound(1100);
+        updateProgress();
+        unlockEffect();
 
         secret.scrollIntoView({
             behavior: "smooth",
@@ -168,75 +256,107 @@ function openVault() {
 
     } else {
 
-        result.innerHTML =
-            "🔒 ZUGRIFF VERWEIGERT! Der Code ist falsch.";
-
-        result.style.color = "#ff4545";
+        showMessage(
+            "vaultResult",
+            "ACCESS DENIED // FALSCHER SICHERHEITSCODE",
+            "error"
+        );
 
         secret.hidden = true;
 
-        playSound(200);
+        playSound(180);
     }
 }
 
 
 // =========================================
-// 6. DEN TÄTER ENTLARVEN
+// 6. TÄTER ENTLARVEN
 // =========================================
 
 function solveCase() {
-    const suspect = document.getElementById("finalSuspect").value;
-
+    const input = document.getElementById("finalSuspect");
     const result = document.getElementById("finalResult");
 
-    if (suspect === "") {
+    if (!input || !result) return;
 
-        result.textContent =
-            "Du musst zuerst einen Verdächtigen auswählen.";
+    const suspect = input.value;
 
+    if (progress.final) return;
+
+    if (!progress.vault) {
+        showMessage(
+            "finalResult",
+            "🔒 ZUGRIFF VERWEIGERT! Öffne zuerst den geheimen Tresor.",
+            "error"
+        );
+        return;
+    }
+
+    if (!suspect) {
+        showMessage(
+            "finalResult",
+            "Bitte wähle zuerst einen Verdächtigen aus.",
+            "error"
+        );
         return;
     }
 
     if (suspect === "vice") {
 
+        progress.final = true;
+
+        pauseTimer();
+
         result.innerHTML = `
             <div class="secret-box">
-                <h3>🚨 FALL GELÖST!</h3>
+                <h3>🚨 CLASSIFIED // CASE SOLVED</h3>
+
+                <h2 style="color:#42e8ff;">
+                    DER VIZEPRÄSIDENT
+                </h2>
 
                 <p>
-                    Du hast den Mörder gefunden!
-                </p>
-
-                <h2>DER VIZEPRÄSIDENT</h2>
-
-                <p>
-                    Er wollte die Macht übernehmen und
-                    hatte Angst, dass der Präsident seine
-                    geheimen Pläne aufdecken würde.
+                    Deine Ermittlungen haben die Wahrheit aufgedeckt.
+                    Der Vizepräsident wollte selbst die Macht übernehmen.
                 </p>
 
                 <p>
-                    Die Beweise im Tresor bestätigten
-                    seine Beteiligung an der Verschwörung.
+                    Er fürchtete, dass der Präsident seine geheimen
+                    politischen Pläne aufdecken würde.
+                </p>
+
+                <p>
+                    Die Uhr, der Brief und die Dokumente im Tresor
+                    führten zur entscheidenden Spur.
                 </p>
 
                 <h3>🏆 GLÜCKWUNSCH, DETEKTIV!</h3>
 
-                <p>
-                    Du hast Fallakte 001 erfolgreich gelöst.
-                </p>
+                <p>FALLAKTE 001 ERFOLGREICH ABGESCHLOSSEN.</p>
+
+                <p>MISSION STATUS: COMPLETE</p>
             </div>
         `;
 
+        result.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+        updateProgress();
         playSound(1200);
+
+        document.body.classList.add("case-solved");
+
+        launchConfetti();
 
     } else {
 
-        result.innerHTML =
-            "❌ Falsche Anschuldigung! " +
-            "Es gibt noch weitere Hinweise zu entdecken.";
-
-        result.style.color = "#ff4545";
+        showMessage(
+            "finalResult",
+            "✕ FALSCHE ANSCHULDIGUNG! Die Beweise sprechen gegen diese Person.",
+            "error"
+        );
 
         playSound(200);
     }
@@ -244,38 +364,123 @@ function solveCase() {
 
 
 // =========================================
-// 7. HINWEISE-SYSTEM
+// 7. HINWEIS-SYSTEM
 // =========================================
 
 function showHint(number) {
+    const hint = hints[number];
 
-    const hints = {
+    if (!hint) return;
 
-        1: "Die Uhrzeit besteht aus vier Ziffern. " +
-           "Achte auf die Stunden und Minuten.",
+    const element = document.getElementById("hint" + number);
 
-        2: "Wer wollte schon lange die Macht des Präsidenten?",
+    if (element) {
 
-        3: "Kombiniere die vier Ziffern der Uhrzeit " +
-           "mit den Hinweisen aus dem Brief."
-    };
+        element.hidden = false;
 
-    if (hints[number]) {
-        alert("🕵️ GEHEIMER HINWEIS:\n\n" + hints[number]);
+        element.innerHTML = `
+            <strong>🕵️ GEHEIME INFORMATION</strong>
+            <p>${hint}</p>
+        `;
+
+        element.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest"
+        });
+
+    } else {
+
+        showMessage(
+            "result" + number,
+            "🕵️ HINWEIS: " + hint,
+            "info"
+        );
+    }
+
+    playSound(600);
+}
+
+
+// =========================================
+// 8. FORTSCHRITTSANZEIGE
+// =========================================
+
+function updateProgress() {
+
+    const completed = Object.values(progress).filter(Boolean).length;
+
+    const percentage = completed * 25;
+
+    const bar = document.getElementById("progressBar");
+    const text = document.getElementById("progressText");
+
+    if (bar) {
+        bar.style.width = percentage + "%";
+    }
+
+    if (text) {
+        text.textContent =
+            percentage + "% DER ERMITTLUNGEN ABGESCHLOSSEN";
+    }
+
+    const counter = document.getElementById("clueCounter");
+
+    if (counter) {
+        counter.textContent = completed + " / 4 BEWEISE";
     }
 }
 
 
 // =========================================
-// 8. SOUND-EFFEKTE
+// 9. NACHRICHTEN-SYSTEM
 // =========================================
+
+function showMessage(id, message, type) {
+
+    const element = document.getElementById(id);
+
+    if (!element) return;
+
+    element.textContent = message;
+
+    element.classList.remove(
+        "success-message",
+        "error-message",
+        "info-message"
+    );
+
+    if (type === "success") {
+        element.classList.add("success-message");
+    }
+
+    if (type === "error") {
+        element.classList.add("error-message");
+    }
+
+    if (type === "info") {
+        element.classList.add("info-message");
+    }
+}
+
+
+// =========================================
+// 10. SOUND SYSTEM
+// =========================================
+
+let audioContext = null;
 
 function playSound(frequency) {
 
     try {
-        const audioContext =
-            new (window.AudioContext ||
-            window.webkitAudioContext)();
+
+        audioContext ??= new (
+            window.AudioContext ||
+            window.webkitAudioContext
+        )();
+
+        if (audioContext.state === "suspended") {
+            audioContext.resume();
+        }
 
         const oscillator = audioContext.createOscillator();
         const gain = audioContext.createGain();
@@ -287,36 +492,111 @@ function playSound(frequency) {
         oscillator.type = "sine";
 
         gain.gain.setValueAtTime(
-            0.15,
+            0.12,
             audioContext.currentTime
         );
 
         gain.gain.exponentialRampToValueAtTime(
             0.001,
-            audioContext.currentTime + 0.3
+            audioContext.currentTime + 0.35
         );
 
         oscillator.start();
-        oscillator.stop(audioContext.currentTime + 0.3);
+        oscillator.stop(audioContext.currentTime + 0.35);
 
     } catch (error) {
-        console.log("Sound konnte nicht abgespielt werden.");
+        console.log("Audio nicht verfügbar.");
     }
 }
 
 
 // =========================================
-// 9. TIMER INITIALISIEREN
+// 11. VISUELLE EFFEKTE
 // =========================================
 
-document.addEventListener("DOMContentLoaded", function () {
-    updateTimer();
-});
+function unlockEffect() {
+
+    document.body.classList.add("evidence-unlocked");
+
+    setTimeout(() => {
+        document.body.classList.remove("evidence-unlocked");
+    }, 1000);
+}
+
+function initializeEffects() {
+
+    const cards = document.querySelectorAll(
+        ".suspect-card, .evidence"
+    );
+
+    cards.forEach(card => {
+
+        card.addEventListener("mouseenter", () => {
+            card.style.transition = "0.3s ease";
+        });
+
+    });
+
+}
 
 
 // =========================================
-// ENDE DER FALLAKTE
+// 12. KONFETTI BEI GEWONNENEM FALL
 // =========================================
 
-console.log("SYSTEM BEREIT.");
-console.log("MISSION: DEN MÖRDER FINDEN.");
+function launchConfetti() {
+
+    const colors = ["#42e8ff", "#ff3d50", "#e5bd70", "#ffffff"];
+
+    for (let i = 0; i < 65; i++) {
+
+        const particle = document.createElement("div");
+
+        particle.style.position = "fixed";
+        particle.style.left = Math.random() * 100 + "vw";
+        particle.style.top = "-15px";
+        particle.style.width = "7px";
+        particle.style.height = "12px";
+        particle.style.background =
+            colors[Math.floor(Math.random() * colors.length)];
+
+        particle.style.zIndex = "99999";
+        particle.style.pointerEvents = "none";
+        particle.style.borderRadius = "2px";
+
+        document.body.appendChild(particle);
+
+        const duration = 2000 + Math.random() * 2000;
+
+        const animation = particle.animate(
+            [
+                {
+                    transform: "translateY(0) rotate(0deg)",
+                    opacity: 1
+                },
+                {
+                    transform:
+                        `translateY(${window.innerHeight + 50}px) rotate(${Math.random() * 900}deg)`,
+                    opacity: 0
+                }
+            ],
+            {
+                duration: duration,
+                easing: "ease-in"
+            }
+        );
+
+        animation.onfinish = () => particle.remove();
+    }
+}
+
+
+// =========================================
+// 13. SYSTEM BEREIT
+// =========================================
+
+console.log("--------------------------------");
+console.log("FBI INVESTIGATION SYSTEM ONLINE");
+console.log("CASE: 001");
+console.log("MISSION: FIND THE KILLER");
+console.log("--------------------------------");
