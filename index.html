@@ -1,39 +1,415 @@
 
-<section id="fall">
-    <h2>🕵️ Fallakte 001</h2>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fallakte 001 – Der Mord im Präsidentenbüro</title>
 
-    <p>
-        Der Präsident wurde um 23:47 Uhr tot
-        in seinem Büro gefunden.
-        Finde heraus, wer dahintersteckt!
-    </p>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Orbitron:wght@400;600;800&display=swap');
 
-    <h3>Beweis 1: Die mysteriöse Uhr</h3>
+* {
+    box-sizing: border-box;
+}
 
-    <p>
-        Die Uhr blieb um 23:15 Uhr stehen.
-        Was könnte das bedeuten?
-    </p>
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top, #252525, #080808 65%);
+    color: #eee;
+    font-family: 'Special Elite', monospace;
+    padding: 30px 15px;
+}
 
-    <button class="button" onclick="showClue()">
-        Hinweis untersuchen
-    </button>
+.container {
+    max-width: 850px;
+    margin: auto;
+}
 
-    <p id="clue"></p>
+.header {
+    text-align: center;
+    border: 1px solid #a52323;
+    padding: 30px 15px;
+    background: linear-gradient(145deg, #241010, #111);
+    box-shadow: 0 0 30px #a000003b;
+    border-radius: 12px;
+}
 
-    <h3>Wer ist der Täter?</h3>
+.header h1 {
+    color: #ff3939;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 3px;
+    font-size: clamp(25px, 5vw, 38px);
+    text-shadow: 0 0 15px red;
+}
 
-    <select id="suspect">
-        <option value="">Verdächtigen auswählen</option>
-        <option value="security">Sicherheitschef</option>
-        <option value="secretary">Sekretärin</option>
-        <option value="vice">Vizepräsident</option>
-        <option value="doctor">Hausarzt</option>
-    </select>
+.status {
+    color: #ff5555;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+}
 
-    <button class="button" onclick="checkSuspect()">
-        Verdächtigen überprüfen
-    </button>
+.card {
+    margin-top: 25px;
+    padding: 25px;
+    background: #171717;
+    border: 1px solid #383838;
+    border-left: 4px solid #b51d1d;
+    border-radius: 9px;
+    box-shadow: 0 8px 25px #0008;
+}
 
-    <p id="result"></p>
-</section>
+h2 {
+    color: #ff4545;
+}
+
+h3 {
+    color: #e8c47a;
+}
+
+button {
+    background: linear-gradient(135deg, #a71919, #5d0808);
+    color: white;
+    border: 1px solid #ff4545;
+    padding: 13px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 12px;
+    transition: .25s;
+    margin-top: 12px;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 18px #ff222277;
+    background: #d32323;
+}
+
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.clue {
+    display: none;
+    background: #282016;
+    border: 1px dashed #e8c47a;
+    color: #f5d99a;
+    padding: 18px;
+    margin-top: 18px;
+    border-radius: 7px;
+    line-height: 1.6;
+    animation: appear .5s ease;
+}
+
+@keyframes appear {
+    from {opacity: 0; transform: translateY(10px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+.suspects {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.suspect {
+    background: #222;
+    border: 1px solid #444;
+    padding: 18px 10px;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.suspect:hover {
+    border-color: #ff4545;
+    background: #321717;
+}
+
+.suspect.selected {
+    border: 2px solid #ff4545;
+    background: #421818;
+    box-shadow: 0 0 15px #ff000044;
+}
+
+.suspect .emoji {
+    font-size: 32px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+select {
+    width: 100%;
+    padding: 14px;
+    margin-top: 15px;
+    color: white;
+    background: #252525;
+    border: 1px solid #666;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.result {
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: 7px;
+    display: none;
+    line-height: 1.6;
+}
+
+.success {
+    display: block;
+    background: #10351e;
+    border: 1px solid #30c76b;
+    color: #8cffad;
+}
+
+.fail {
+    display: block;
+    background: #3b1414;
+    border: 1px solid #e33;
+    color: #ff9999;
+}
+
+.progress {
+    height: 8px;
+    background: #333;
+    border-radius: 10px;
+    margin-top: 15px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, red, orange);
+    transition: .5s;
+}
+
+.footer {
+    text-align: center;
+    color: #777;
+    font-size: 11px;
+    margin: 30px;
+    letter-spacing: 2px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <div class="status">● GEHEIME ERMITTLUNG // LEVEL 01</div>
+        <h1>🕵️ FALLAKTE 001</h1>
+        <p>DER TOD IM PRÄSIDENTENBÜRO</p>
+        <p style="color:#aaa">CLASSIFIED INFORMATION</p>
+    </div>
+
+    <div class="card">
+        <h2>🚨 DER TATORT</h2>
+
+        <p>
+            Um <strong>23:47 Uhr</strong> wurde der Präsident
+            tot in seinem Büro gefunden.
+        </p>
+
+        <p>
+            Die Tür war verschlossen. Vier Personen hatten
+            Zugang zum Gebäude.
+        </p>
+
+        <p style="color:#ff5555">
+            Deine Mission: Finde den Täter, bevor alle Beweise verschwinden!
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>⌚ BEWEIS 01 – DIE MYSTERIÖSE UHR</h2>
+
+        <p>
+            Eine alte Wanduhr wurde am Tatort gefunden.
+            Sie ist um exakt <strong>23:15 Uhr</strong> stehen geblieben.
+        </p>
+
+        <p>Was ist passiert?</p>
+
+        <button onclick="showClue()">
+            🔍 BEWEIS UNTERSUCHEN
+        </button>
+
+        <div class="clue" id="clue">
+            <strong>📁 GEHEIME NOTIZ ENTDECKT</strong>
+            <p>
+                Die Uhr ist nicht einfach kaputtgegangen.
+                Auf dem Glas befinden sich winzige Glassplitter.
+                Jemand könnte die Uhr während eines Kampfes
+                beschädigt haben.
+            </p>
+            <p>⚠️ Zeitpunkt des Vorfalls: möglicherweise 23:15 Uhr.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>👥 BEWEIS 02 – DIE VERDÄCHTIGEN</h2>
+
+        <p>Vier Personen kommen infrage. Wähle deinen Hauptverdächtigen:</p>
+
+        <div class="suspects">
+
+            <div class="suspect" onclick="selectSuspect('security',this)">
+                <span class="emoji">🛡️</span>
+                Sicherheitschef
+                <small> Zugang zum Gebäude</small>
+            </div>
+
+            <div class="suspect" onclick="selectSuspect('secretary',this)">
+                <span class="emoji">📁</span>
+                Sekretärin
+                <small> Kennt alle Termine</small>
+            </div>
+
+            <div class="suspect" onclick="selectSuspect('vice',this)">
+                <span class="emoji">🎩</span>
+                Vizepräsident
+                <small> Politisches Motiv</small>
+            </div>
+
+            <div class="suspect" onclick="selectSuspect('doctor',this)">
+                <span class="emoji">🩺</span>
+                Hausarzt
+                <small> War zuletzt im Büro</small>
+            </div>
+
+        </div>
+
+        <button onclick="checkSuspect()">
+            🔐 VERDÄCHTIGEN ANALYSIEREN
+        </button>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <div class="card">
+        <h2>📊 ERMITTLUNGSFORTSCHRITT</h2>
+
+        <p id="progressText">0 % der Ermittlungen abgeschlossen</p>
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        CONFIDENTIAL // POLICE DEPARTMENT // CASE 001
+    </div>
+
+</div>
+
+<script>
+
+let selected = "";
+let clueFound = false;
+let attempts = 0;
+
+// Täter: Vizepräsident
+const killer = "vice";
+
+function showClue() {
+    document.getElementById("clue").style.display = "block";
+
+    if (!clueFound) {
+        clueFound = true;
+        updateProgress();
+    }
+}
+
+function selectSuspect(id, element) {
+    selected = id;
+
+    document.querySelectorAll(".suspect").forEach(el => {
+        el.classList.remove("selected");
+    });
+
+    element.classList.add("selected");
+}
+
+function checkSuspect() {
+
+    const result = document.getElementById("result");
+
+    if (!selected) {
+        result.className = "result fail";
+        result.innerHTML = "⚠️ Wähle zuerst einen Verdächtigen aus!";
+        return;
+    }
+
+    attempts++;
+
+    if (selected === killer) {
+
+        result.className = "result success";
+
+        result.innerHTML = `
+            <h2>🎉 FALL GELÖST!</h2>
+            <p>
+                Du hast den Täter entlarvt!
+                Der Vizepräsident war für den Mord verantwortlich.
+            </p>
+            <p>
+                Sein Motiv: Er wollte selbst Präsident werden.
+                Die Uhr blieb während einer Auseinandersetzung um
+                23:15 Uhr stehen.
+            </p>
+            <h3>🏆 ERMITTLUNGSERFOLG!</h3>
+            <p>Versuche: ${attempts}</p>
+            <p>Fallakte 001 wurde erfolgreich geschlossen.</p>
+        `;
+
+        document.querySelectorAll(".suspect").forEach(el => {
+            el.style.pointerEvents = "none";
+        });
+
+        document.querySelector(".suspect.selected").style.borderColor = "#30c76b";
+
+    } else {
+
+        result.className = "result fail";
+
+        result.innerHTML = `
+            <h3>❌ FALSCHE SPUR!</h3>
+            <p>Diese Person ist nicht der Täter.</p>
+            <p>Untersuche die Beweise genauer und versuche es erneut.</p>
+            <p>Fehlversuche: ${attempts}</p>
+        `;
+    }
+
+    updateProgress();
+}
+
+function updateProgress() {
+
+    let progress = clueFound ? 50 : 0;
+
+    if (document.getElementById("result").classList.contains("success")) {
+        progress = 100;
+    }
+
+    document.getElementById("progressBar").style.width = progress + "%";
+
+    document.getElementById("progressText").innerText =
+        progress + " % der Ermittlungen abgeschlossen";
+}
+
+</script>
+
+</body>
+</html>
