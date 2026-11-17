@@ -1,0 +1,39 @@
+
+<section id="fall">
+    <h2>🕵️ Fallakte 001</h2>
+
+    <p>
+        Der Präsident wurde um 23:47 Uhr tot
+        in seinem Büro gefunden.
+        Finde heraus, wer dahintersteckt!
+    </p>
+
+    <h3>Beweis 1: Die mysteriöse Uhr</h3>
+
+    <p>
+        Die Uhr blieb um 23:15 Uhr stehen.
+        Was könnte das bedeuten?
+    </p>
+
+    <button class="button" onclick="showClue()">
+        Hinweis untersuchen
+    </button>
+
+    <p id="clue"></p>
+
+    <h3>Wer ist der Täter?</h3>
+
+    <select id="suspect">
+        <option value="">Verdächtigen auswählen</option>
+        <option value="security">Sicherheitschef</option>
+        <option value="secretary">Sekretärin</option>
+        <option value="vice">Vizepräsident</option>
+        <option value="doctor">Hausarzt</option>
+    </select>
+
+    <button class="button" onclick="checkSuspect()">
+        Verdächtigen überprüfen
+    </button>
+
+    <p id="result"></p>
+</section>

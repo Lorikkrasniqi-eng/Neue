@@ -1,0 +1,51 @@
+
+// Begrüssung beim Laden der Website
+window.addEventListener("load", function () {
+    console.log("Willkommen beim Escape Room!");
+});
+
+// Escape-Room-Button
+const buttons = document.querySelectorAll(".button");
+
+buttons.forEach(function(button) {
+    button.addEventListener("click", function() {
+        console.log("Das Abenteuer beginnt!");
+    });
+});
+
+// Countdown-Funktion
+let time = 60 * 60;
+let timer;
+
+function startCountdown() {
+    clearInterval(timer);
+
+    timer = setInterval(function() {
+        let minutes = Math.floor(time / 60);
+        let seconds = time % 60;
+
+        console.log(
+            minutes + ":" + String(seconds).padStart(2, "0")
+        );
+
+        if (time <= 0) {
+            clearInterval(timer);
+            alert("Die Zeit ist abgelaufen!");
+        } else {
+            time--;
+        }
+    }, 1000);
+}
+
+// Kleines Rätsel
+function checkRiddle() {
+    let answer = prompt(
+        "RÄTSEL: Was hat Schlüssel, aber öffnet keine Türen?"
+    );
+
+    if (answer && answer.toLowerCase().trim() === "klavier") {
+        alert("Richtig! Du hast das Rätsel gelöst! 🔓");
+    } else {
+        alert("Leider falsch! Versuche es nochmals. 🔒");
+    }
+}
