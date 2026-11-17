@@ -1,51 +1,322 @@
 
-// Begrüssung beim Laden der Website
+/* =========================================
+   FALLAKTE 001 – MORD AM PRÄSIDENTEN
+   INTERAKTIVES ESCAPE ROOM SYSTEM
+========================================= */
+
+// =========================================
+// 1. BEGRÜSSUNG
+// =========================================
+
 window.addEventListener("load", function () {
-    console.log("Willkommen beim Escape Room!");
+    console.log("FALLAKTE 001 geladen.");
+    console.log("Ermittler, deine Mission beginnt jetzt.");
+
+    document.body.classList.add("loaded");
 });
 
-// Escape-Room-Button
-const buttons = document.querySelectorAll(".button");
 
-buttons.forEach(function(button) {
-    button.addEventListener("click", function() {
-        console.log("Das Abenteuer beginnt!");
-    });
-});
+// =========================================
+// 2. COUNTDOWN – 60 MINUTEN
+// =========================================
 
-// Countdown-Funktion
-let time = 60 * 60;
-let timer;
+let timeLeft = 60 * 60;
+let timerInterval = null;
+let timerRunning = false;
 
-function startCountdown() {
-    clearInterval(timer);
+function updateTimer() {
+    const timerDisplay = document.getElementById("timer");
 
-    timer = setInterval(function() {
-        let minutes = Math.floor(time / 60);
-        let seconds = time % 60;
+    if (!timerDisplay) return;
 
-        console.log(
-            minutes + ":" + String(seconds).padStart(2, "0")
-        );
+    let minutes = Math.floor(timeLeft / 60);
+    let seconds = timeLeft % 60;
 
-        if (time <= 0) {
-            clearInterval(timer);
-            alert("Die Zeit ist abgelaufen!");
-        } else {
-            time--;
+    timerDisplay.textContent =
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0");
+
+    if (timeLeft <= 300) {
+        timerDisplay.style.color = "#ff3030";
+    }
+}
+
+function startTimer() {
+    if (timerRunning || timeLeft <= 0) return;
+
+    timerRunning = true;
+
+    timerInterval = setInterval(function () {
+        timeLeft--;
+        updateTimer();
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            timerRunning = false;
+
+            alert("ZEIT ABGELAUFEN! Der Fall bleibt ungelöst.");
         }
     }, 1000);
 }
 
-// Kleines Rätsel
-function checkRiddle() {
-    let answer = prompt(
-        "RÄTSEL: Was hat Schlüssel, aber öffnet keine Türen?"
-    );
+function pauseTimer() {
+    clearInterval(timerInterval);
+    timerRunning = false;
+}
 
-    if (answer && answer.toLowerCase().trim() === "klavier") {
-        alert("Richtig! Du hast das Rätsel gelöst! 🔓");
+function resetTimer() {
+    clearInterval(timerInterval);
+
+    timerRunning = false;
+    timeLeft = 60 * 60;
+
+    updateTimer();
+}
+
+
+// =========================================
+// 3. RÄTSEL 01 – DIE UHR
+// =========================================
+
+function checkPuzzle1() {
+    const answer = document
+        .getElementById("answer1")
+        .value.trim();
+
+    const result = document.getElementById("result1");
+
+    if (answer === "2315") {
+        result.innerHTML =
+            "🔓 RICHTIG! Die Uhrzeit lautet 23:15. " +
+            "Du hast einen wichtigen Hinweis gefunden!";
+
+        result.style.color = "#55d987";
+
+        playSound(800);
+
     } else {
-        alert("Leider falsch! Versuche es nochmals. 🔒");
+        result.innerHTML =
+            "❌ FALSCH! Untersuche die kaputte Uhr nochmals.";
+
+        result.style.color = "#ff4545";
+
+        playSound(200);
     }
 }
+
+
+// =========================================
+// 4. RÄTSEL 02 – DER BRIEF
+// =========================================
+
+function checkPuzzle2() {
+    const answer = document.getElementById("answer2").value;
+    const result = document.getElementById("result2");
+
+    if (answer === "vice") {
+
+        result.innerHTML =
+            "🔍 RICHTIG! Der Vizepräsident hatte ein starkes Motiv.";
+
+        result.style.color = "#55d987";
+
+        playSound(800);
+
+    } else if (answer === "") {
+
+        result.textContent =
+            "Bitte wähle zuerst einen Verdächtigen.";
+
+    } else {
+
+        result.innerHTML =
+            "❌ Dieser Verdächtige passt nicht zum Hinweis.";
+
+        result.style.color = "#ff4545";
+
+        playSound(200);
+    }
+}
+
+
+// =========================================
+// 5. GEHEIMER TRESOR
+// =========================================
+
+function openVault() {
+    const code = document.getElementById("vaultCode").value;
+
+    const result = document.getElementById("vaultResult");
+    const secret = document.getElementById("secret");
+
+    if (code === "2315") {
+
+        result.innerHTML =
+            "🔓 ZUGRIFF GEWÄHRT! Der Tresor ist geöffnet.";
+
+        result.style.color = "#55d987";
+
+        secret.hidden = false;
+
+        playSound(1000);
+
+        secret.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+
+    } else {
+
+        result.innerHTML =
+            "🔒 ZUGRIFF VERWEIGERT! Der Code ist falsch.";
+
+        result.style.color = "#ff4545";
+
+        secret.hidden = true;
+
+        playSound(200);
+    }
+}
+
+
+// =========================================
+// 6. DEN TÄTER ENTLARVEN
+// =========================================
+
+function solveCase() {
+    const suspect = document.getElementById("finalSuspect").value;
+
+    const result = document.getElementById("finalResult");
+
+    if (suspect === "") {
+
+        result.textContent =
+            "Du musst zuerst einen Verdächtigen auswählen.";
+
+        return;
+    }
+
+    if (suspect === "vice") {
+
+        result.innerHTML = `
+            <div class="secret-box">
+                <h3>🚨 FALL GELÖST!</h3>
+
+                <p>
+                    Du hast den Mörder gefunden!
+                </p>
+
+                <h2>DER VIZEPRÄSIDENT</h2>
+
+                <p>
+                    Er wollte die Macht übernehmen und
+                    hatte Angst, dass der Präsident seine
+                    geheimen Pläne aufdecken würde.
+                </p>
+
+                <p>
+                    Die Beweise im Tresor bestätigten
+                    seine Beteiligung an der Verschwörung.
+                </p>
+
+                <h3>🏆 GLÜCKWUNSCH, DETEKTIV!</h3>
+
+                <p>
+                    Du hast Fallakte 001 erfolgreich gelöst.
+                </p>
+            </div>
+        `;
+
+        playSound(1200);
+
+    } else {
+
+        result.innerHTML =
+            "❌ Falsche Anschuldigung! " +
+            "Es gibt noch weitere Hinweise zu entdecken.";
+
+        result.style.color = "#ff4545";
+
+        playSound(200);
+    }
+}
+
+
+// =========================================
+// 7. HINWEISE-SYSTEM
+// =========================================
+
+function showHint(number) {
+
+    const hints = {
+
+        1: "Die Uhrzeit besteht aus vier Ziffern. " +
+           "Achte auf die Stunden und Minuten.",
+
+        2: "Wer wollte schon lange die Macht des Präsidenten?",
+
+        3: "Kombiniere die vier Ziffern der Uhrzeit " +
+           "mit den Hinweisen aus dem Brief."
+    };
+
+    if (hints[number]) {
+        alert("🕵️ GEHEIMER HINWEIS:\n\n" + hints[number]);
+    }
+}
+
+
+// =========================================
+// 8. SOUND-EFFEKTE
+// =========================================
+
+function playSound(frequency) {
+
+    try {
+        const audioContext =
+            new (window.AudioContext ||
+            window.webkitAudioContext)();
+
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
+
+        oscillator.frequency.value = frequency;
+        oscillator.type = "sine";
+
+        gain.gain.setValueAtTime(
+            0.15,
+            audioContext.currentTime
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            0.001,
+            audioContext.currentTime + 0.3
+        );
+
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + 0.3);
+
+    } catch (error) {
+        console.log("Sound konnte nicht abgespielt werden.");
+    }
+}
+
+
+// =========================================
+// 9. TIMER INITIALISIEREN
+// =========================================
+
+document.addEventListener("DOMContentLoaded", function () {
+    updateTimer();
+});
+
+
+// =========================================
+// ENDE DER FALLAKTE
+// =========================================
+
+console.log("SYSTEM BEREIT.");
+console.log("MISSION: DEN MÖRDER FINDEN.");
